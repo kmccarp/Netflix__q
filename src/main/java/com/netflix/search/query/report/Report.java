@@ -48,13 +48,13 @@ public abstract class Report {
     private DateUtil dateUtil = new DateUtil();
 
     public Report() {
-		this.date = dateUtil.getDateFromCurrentTime();
+        this.date = dateUtil.getDateFromCurrentTime();
     }
 
     public void setDate(String dateString)
     {
-		if (dateString != null)
-			this.date = dateUtil.getDateFromString(dateString);
+        if (dateString != null)
+            this.date = dateUtil.getDateFromString(dateString);
     }
 
     public String reportNameForUpload()
@@ -95,33 +95,33 @@ public abstract class Report {
             currentMap.put(currentItem, currentItem);
         }
 
-		Map<ReportItem, ReportItem> previousMap = Maps.newLinkedHashMap();
-		if (previous != null && previous.getItems() != null)
-		{
-			for (ReportItem previousItem : previous.getItems())
-			{
-				previousMap.put(previousItem, previousItem);
-			}
+        Map<ReportItem, ReportItem> previousMap = Maps.newLinkedHashMap();
+        if (previous != null && previous.getItems() != null)
+        {
+            for (ReportItem previousItem : previous.getItems())
+            {
+                previousMap.put(previousItem, previousItem);
+            }
 
-			for (ReportItem key : previous.getItems())
-			{
-				ReportItem diffForReportItem = getDiffForReportItem(key, currentMap.get(key));
-				if (diffForReportItem != null)
-					returnValueItems.add(diffForReportItem);
-			}
+            for (ReportItem key : previous.getItems())
+            {
+                ReportItem diffForReportItem = getDiffForReportItem(key, currentMap.get(key));
+                if (diffForReportItem != null)
+                    returnValueItems.add(diffForReportItem);
+            }
 
-			for (ReportItem key : this.getItems())
-			{
-				if (!previous.getItems().contains(key))
-				{
-					ReportItem diffForReportItem = getDiffForReportItem(previousMap.get(key), key);
-					if (diffForReportItem != null)
-					{
-						returnValueItems.add(diffForReportItem);
-					}
-				}
-			}
-		}
+            for (ReportItem key : this.getItems())
+            {
+                if (!previous.getItems().contains(key))
+                {
+                    ReportItem diffForReportItem = getDiffForReportItem(previousMap.get(key), key);
+                    if (diffForReportItem != null)
+                    {
+                        returnValueItems.add(diffForReportItem);
+                    }
+                }
+            }
+        }
 
         return newReport(returnValueItems);
     }
@@ -135,7 +135,7 @@ public abstract class Report {
     public static DetailReport copyCurrentFileToPreviousAndGetPrevious(String currentName, String previousName) throws IOException {
         File currentFile = new File(Properties.dataDir.get() + currentName);
         Path currentPath = currentFile.toPath();
-        File previousFile = new File(Properties.dataDir.get() + previousName+".tsv");
+        File previousFile = new File(Properties.dataDir.get() + previousName + ".tsv");
         Path previousPath = previousFile.toPath();
         Files.copy(currentPath, previousPath, StandardCopyOption.REPLACE_EXISTING);
 

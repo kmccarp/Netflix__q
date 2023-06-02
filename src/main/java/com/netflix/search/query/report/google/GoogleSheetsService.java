@@ -103,17 +103,17 @@ public class GoogleSheetsService {
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws Exception {
         File privateKeyFile = new File(Properties.googleSheetsKeyDir.get() + Properties.p12KeyFileName.get());
         GoogleCredential cr = GoogleCredential
-                .fromStream(new FileInputStream(privateKeyFile))
-                .createScoped(SCOPES);
+            .fromStream(new FileInputStream(privateKeyFile))
+            .createScoped(SCOPES);
         GoogleCredential.Builder builder = new GoogleCredential.Builder()
-                .setTransport(HTTP_TRANSPORT)
-                .setJsonFactory(JSON_FACTORY)
-                .setServiceAccountScopes(SCOPES)
-                .setServiceAccountId(cr.getServiceAccountId())
-                .setServiceAccountPrivateKey(cr.getServiceAccountPrivateKey())
-                .setServiceAccountPrivateKeyId(cr.getServiceAccountPrivateKeyId())
-                .setTokenServerEncodedUrl(cr.getTokenServerEncodedUrl())
-                .setServiceAccountUser(Properties.serviceAccountEmail.get());
+            .setTransport(HTTP_TRANSPORT)
+            .setJsonFactory(JSON_FACTORY)
+            .setServiceAccountScopes(SCOPES)
+            .setServiceAccountId(cr.getServiceAccountId())
+            .setServiceAccountPrivateKey(cr.getServiceAccountPrivateKey())
+            .setServiceAccountPrivateKeyId(cr.getServiceAccountPrivateKeyId())
+            .setTokenServerEncodedUrl(cr.getTokenServerEncodedUrl())
+            .setServiceAccountUser(Properties.serviceAccountEmail.get());
 
         return builder.build();
     }
@@ -189,7 +189,8 @@ public class GoogleSheetsService {
             if (headerDefault != null) {
                 returnValue.add(Arrays.asList(headerDefault).stream().collect(Collectors.joining(Properties.inputDelimiter.get())));
                 headerSize = headerDefault.length;
-            } else {
+            }
+            else {
                 headerSize = values.get(0).size();
             }
             for (List<Object> row : values.subList(startingIndex, values.size())) {
@@ -198,8 +199,8 @@ public class GoogleSheetsService {
                 if (diffInRowSize > 0)
                     for (int i = 0; i < diffInRowSize; i++) trailingEmptyCells.append(Properties.inputDelimiter.get());
                 String rowAsString = row.stream()
-                        .map(object -> Objects.toString(object))
-                        .collect(Collectors.joining(Properties.inputDelimiter.get()));
+                    .map(object -> Objects.toString(object))
+                    .collect(Collectors.joining(Properties.inputDelimiter.get()));
                 returnValue.add(rowAsString.concat(trailingEmptyCells.toString()));
             }
         }
@@ -268,10 +269,10 @@ public class GoogleSheetsService {
         }
 
         Request request = new Request()
-                .setUpdateCells(new UpdateCellsRequest()
-                        .setStart(grid)
-                        .setRows(rowData)
-                        .setFields("userEnteredValue"));
+            .setUpdateCells(new UpdateCellsRequest()
+                .setStart(grid)
+                .setRows(rowData)
+                .setFields("userEnteredValue"));
         return request;
     }
 

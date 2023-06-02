@@ -41,12 +41,12 @@ public class DetailReportItem extends ReportItem {
     }
 
     @Override
-	protected void appendKeyFromNamedValues(String headerValue, String value)
+    protected void appendKeyFromNamedValues(String headerValue, String value)
     {
         if (headerValue.equals(DetailReportHeader.name.toString()))
-        	setKey(value);
+            setKey(value);
         else if (headerValue.equals(DetailReportHeader.failure.toString()) || headerValue.equals(DetailReportHeader.query.toString()))
-        	setKey(getKey() + "_" + value);
+            setKey(getKey() + "_" + value);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DetailReportItem extends ReportItem {
     @Override
     public String toString()
     {
-        return getNamedValues().get(DetailReportHeader.name.toString()) + "\t" + getNamedValues().get(DetailReportHeader.failure.toString()) + "\t" + getNamedValues().get(DetailReportHeader.query.toString()) + "\t" + (getNamedValues().get(DetailReportHeader.expected.toString())==null?"":getNamedValues().get(DetailReportHeader.expected.toString())) + "\t" + getNamedValues().get(DetailReportHeader.actual.toString());
+        return getNamedValues().get(DetailReportHeader.name.toString()) + "\t" + getNamedValues().get(DetailReportHeader.failure.toString()) + "\t" + getNamedValues().get(DetailReportHeader.query.toString()) + "\t" + (getNamedValues().get(DetailReportHeader.expected.toString()) == null ? "" : getNamedValues().get(DetailReportHeader.expected.toString())) + "\t" + getNamedValues().get(DetailReportHeader.actual.toString());
     }
 
     @Override
@@ -74,7 +74,8 @@ public class DetailReportItem extends ReportItem {
         if (getKey() == null) {
             if (other.getKey() != null)
                 return false;
-        } else if (!getKey().equals(other.getKey()))
+        }
+        else if (!getKey().equals(other.getKey()))
             return false;
         return true;
     }

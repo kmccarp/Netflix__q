@@ -73,7 +73,8 @@ public class SummaryReportItem extends ReportItem {
         if (getKey() == null) {
             if (other.getKey() != null)
                 return false;
-        } else if (!getKey().equals(other.getKey()))
+        }
+        else if (!getKey().equals(other.getKey()))
             return false;
         return true;
     }

@@ -27,11 +27,11 @@ public class DetailReportDiff extends DetailReport {
     @Override
     protected String getReportName()
     {
-        return super.getReportName()+"_diff";
+        return super.getReportName() + "_diff";
     }
-    
+
     @Override
-    public String reportNameForUpload(){
-        return "diff_"+super.reportNameForUpload();
+    public String reportNameForUpload() {
+        return "diff_" + super.reportNameForUpload();
     }
 }

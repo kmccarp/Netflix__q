@@ -29,86 +29,86 @@ import com.netflix.search.query.report.ResultType;
 
 public class DetailReportTest {
 
-	private static final String TITLE1 = "title1";
-	private static final String TITLE2 = "title2";
-	private static final String Q1 = "a";
-	private static final String Q2 = "b";
-	private static final String TEST1_EN = "test1-english";
+    private static final String TITLE1 = "title1";
+    private static final String TITLE2 = "title2";
+    private static final String Q1 = "a";
+    private static final String Q2 = "b";
+    private static final String TEST1_EN = "test1-english";
 
-	@Test
-	void emptyReportsTest()
-	{
-		Report previousReport = new DetailReport();
-		Report report = new DetailReport();
-		Report diffReport = report.createReportDiffs(previousReport);
-		List<ReportItem> items = diffReport.getItems();
-		List<ReportItem> expectedItems = Lists.newArrayList();
-		Assert.assertEquals(items, expectedItems);
-	}
+    @Test
+    void emptyReportsTest()
+    {
+        Report previousReport = new DetailReport();
+        Report report = new DetailReport();
+        Report diffReport = report.createReportDiffs(previousReport);
+        List<ReportItem> items = diffReport.getItems();
+        List<ReportItem> expectedItems = Lists.newArrayList();
+        Assert.assertEquals(items, expectedItems);
+    }
 
-	@Test
-	void noDiffReportsTest()
-	{
-		Report previousReport = new DetailReport();
-		List<ReportItem> itemsForPreviousReport = Lists.newArrayList();
-		itemsForPreviousReport.add(new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE));
-		previousReport.setItems(itemsForPreviousReport);
+    @Test
+    void noDiffReportsTest()
+    {
+        Report previousReport = new DetailReport();
+        List<ReportItem> itemsForPreviousReport = Lists.newArrayList();
+        itemsForPreviousReport.add(new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE));
+        previousReport.setItems(itemsForPreviousReport);
 
-		Report report = new DetailReport();
-		List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
-		itemsForCurrentReport.add(new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE));
+        Report report = new DetailReport();
+        List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
+        itemsForCurrentReport.add(new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE));
 
-		report.setItems(itemsForCurrentReport);
+        report.setItems(itemsForCurrentReport);
 
-		Report diffReport = report.createReportDiffs(previousReport);
+        Report diffReport = report.createReportDiffs(previousReport);
 
-		List<ReportItem> itemsForDiffsReport = diffReport.getItems();
+        List<ReportItem> itemsForDiffsReport = diffReport.getItems();
 
-		Map<String, ReportItem> expectedItems = Maps.newHashMap();
-		expectedItems.put("test1", new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE));
+        Map<String, ReportItem> expectedItems = Maps.newHashMap();
+        expectedItems.put("test1", new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE));
 
-		for (ReportItem item : itemsForDiffsReport)
-		{
-			Assert.assertEquals(item.getNamedValues(), expectedItems.get(item.getNamedValues().get(DetailReportHeader.name.toString())).getNamedValues());
-		}
-	}
+        for (ReportItem item : itemsForDiffsReport)
+        {
+            Assert.assertEquals(item.getNamedValues(), expectedItems.get(item.getNamedValues().get(DetailReportHeader.name.toString())).getNamedValues());
+        }
+    }
 
-	@Test
-	void diffReportsTest()
-	{
-		Report previousReport = new DetailReport();
-		List<ReportItem> itemsForPreviousReport = Lists.newArrayList();
-		itemsForPreviousReport.add(new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE));
-		previousReport.setItems(itemsForPreviousReport);
+    @Test
+    void diffReportsTest()
+    {
+        Report previousReport = new DetailReport();
+        List<ReportItem> itemsForPreviousReport = Lists.newArrayList();
+        itemsForPreviousReport.add(new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE));
+        previousReport.setItems(itemsForPreviousReport);
 
-		Report report = new DetailReport();
-		List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
-		itemsForCurrentReport.add(new DetailReportItem(TEST1_EN, ResultType.supersetResultsFailed, Q2, TITLE1, TITLE2));
+        Report report = new DetailReport();
+        List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
+        itemsForCurrentReport.add(new DetailReportItem(TEST1_EN, ResultType.supersetResultsFailed, Q2, TITLE1, TITLE2));
 
-		report.setItems(itemsForCurrentReport);
+        report.setItems(itemsForCurrentReport);
 
-		Report diffReport = report.createReportDiffs(previousReport);
+        Report diffReport = report.createReportDiffs(previousReport);
 
-		List<ReportItem> itemsForDiffsReport = diffReport.getItems();
+        List<ReportItem> itemsForDiffsReport = diffReport.getItems();
 
-		Map<String, ReportItem> expectedItems = Maps.newHashMap();
+        Map<String, ReportItem> expectedItems = Maps.newHashMap();
 
-		DetailReportItem fixedItem = new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE);
-		fixedItem.setValue(DetailReportHeader.comments.toString(), DetailReport.FIXED);
-		expectedItems.put(TEST1_EN + ResultType.noResultsFailed.toString(), fixedItem);
+        DetailReportItem fixedItem = new DetailReportItem(TEST1_EN, ResultType.noResultsFailed, Q1, TITLE1, DetailReport.NONE);
+        fixedItem.setValue(DetailReportHeader.comments.toString(), DetailReport.FIXED);
+        expectedItems.put(TEST1_EN + ResultType.noResultsFailed.toString(), fixedItem);
 
-		DetailReportItem newItem = new DetailReportItem(TEST1_EN, ResultType.supersetResultsFailed, Q2, TITLE1, TITLE2);
-		newItem.setValue(DetailReportHeader.comments.toString(), DetailReport.NEW);
-		expectedItems.put(TEST1_EN + ResultType.supersetResultsFailed.toString(), newItem);
+        DetailReportItem newItem = new DetailReportItem(TEST1_EN, ResultType.supersetResultsFailed, Q2, TITLE1, TITLE2);
+        newItem.setValue(DetailReportHeader.comments.toString(), DetailReport.NEW);
+        expectedItems.put(TEST1_EN + ResultType.supersetResultsFailed.toString(), newItem);
 
-		for (ReportItem item : itemsForDiffsReport)
-		{
-			Map<String, String> actualNamedValues = item.getNamedValues();
-			String testName = actualNamedValues.get(DetailReportHeader.name.toString());
-			String failure = actualNamedValues.get(DetailReportHeader.failure.toString());
-			Map<String, String> expectedNamedValues = expectedItems.get(testName + failure).getNamedValues();
-			Assert.assertEquals(actualNamedValues, expectedNamedValues);
-		}
+        for (ReportItem item : itemsForDiffsReport)
+        {
+            Map<String, String> actualNamedValues = item.getNamedValues();
+            String testName = actualNamedValues.get(DetailReportHeader.name.toString());
+            String failure = actualNamedValues.get(DetailReportHeader.failure.toString());
+            Map<String, String> expectedNamedValues = expectedItems.get(testName + failure).getNamedValues();
+            Assert.assertEquals(actualNamedValues, expectedNamedValues);
+        }
 
-	}
+    }
 }

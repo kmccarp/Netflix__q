@@ -22,7 +22,7 @@ import com.google.common.base.Joiner;
 import com.netflix.search.query.Properties;
 
 public abstract class ReportItem {
-    private Map<String, String>  namedValues= Maps.newLinkedHashMap();
+    private Map<String, String>  namedValues = Maps.newLinkedHashMap();
     private String key = null;
 
     public Map<String, String> getNamedValues()
@@ -31,16 +31,16 @@ public abstract class ReportItem {
     }
 
     public String getKey()
-	{
-		return key;
-	}
+    {
+        return key;
+    }
 
-	public void setKey(String key)
-	{
-		this.key = key;
-	}
+    public void setKey(String key)
+    {
+        this.key = key;
+    }
 
-	public ReportItem(Map<String, String> namedValues) {
+    public ReportItem(Map<String, String> namedValues) {
         this.namedValues = namedValues;
         this.key = getKeyFromNamedValues();
     }
@@ -50,6 +50,7 @@ public abstract class ReportItem {
     }
 
     protected abstract String getKeyFromNamedValues();
+
     protected abstract void appendKeyFromNamedValues(String headerValue, String value);
 
     public void setValue(String headerValue, String value)
@@ -59,15 +60,15 @@ public abstract class ReportItem {
             appendKeyFromNamedValues(headerValue, value);
         }
     }
-    
+
     @Override
     public String toString()
     {
         Joiner joiner = Joiner.on(Properties.inputDelimiter.get());
         return joiner.join(namedValues.values());
     }
-    
-    
+
+
     @Override
     public int hashCode()
     {

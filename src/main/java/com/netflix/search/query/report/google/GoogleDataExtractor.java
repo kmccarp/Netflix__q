@@ -80,7 +80,8 @@ public class GoogleDataExtractor {
                 titlesWithQueriesPerDataset.put(sheetId, titlesWithQueries);
                 List<String> titlesWithQueriesAsTsv = searchGoogleSheetsService.extractWorksheetData(spreadsheetData, null);
                 writeReportToLocalDisk(sheetId, titlesWithQueriesAsTsv);
-            } else {
+            }
+            else {
                 logger.info("Sheet doesn't exist or it is empty: " + sheetId);
             }
             if (Properties.googleApiThrottlePause.get() > 0) Thread.sleep(Properties.googleApiThrottlePause.get());

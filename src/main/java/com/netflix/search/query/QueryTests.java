@@ -82,7 +82,7 @@ public class QueryTests {
         return googleDataExtractor;
     }
 
-    public QueryTests(TitleIdUtils titleIdUtils){
+    public QueryTests(TitleIdUtils titleIdUtils) {
         this.titleIdUtils = titleIdUtils;
     }
 

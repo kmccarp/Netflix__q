@@ -29,10 +29,10 @@ import com.netflix.search.query.report.ReportType;
 import com.netflix.search.query.report.ResultType;
 
 public class DetailReport extends Report {
-	public static final String NEW = "NEW";
-	public static final String NONE = "NONE";
-	public static final String FIXED = "FIXED";
-	private static final String SEPARATOR = "~~~";
+    public static final String NEW = "NEW";
+    public static final String NONE = "NONE";
+    public static final String FIXED = "FIXED";
+    private static final String SEPARATOR = "~~~";
 
     public DetailReport(List<ReportItem> items) {
         super();
@@ -44,19 +44,19 @@ public class DetailReport extends Report {
     }
 
     @Override
-	public ReportType getReportType()
-	{
-		return ReportType.details;
-	}
-    
+    public ReportType getReportType()
+    {
+        return ReportType.details;
+    }
+
     @Override
     protected String getReportName()
     {
         return ReportType.details.toString();
     }
-    
+
     @Override
-	protected Report newReport(List<ReportItem> items)
+    protected Report newReport(List<ReportItem> items)
     {
         return new DetailReportDiff(items);
     }
@@ -74,14 +74,16 @@ public class DetailReport extends Report {
                 uniqActual.removeAll(intersection);
                 String actualTitles = getTitles(uniqActual, titleIdToName);
                 if (results.containsAll(queryToIds.get(q))) {
-                	getItems().add(new DetailReportItem(testName, ResultType.supersetResultsFailed, q, expectedTitles, actualTitles));
+                    getItems().add(new DetailReportItem(testName, ResultType.supersetResultsFailed, q, expectedTitles, actualTitles));
                     updateCounter(counters, ResultType.supersetResultsFailed);
-                } else {
-                	getItems().add(new DetailReportItem(testName, ResultType.differentResultsFailed, q, expectedTitles, actualTitles));
+                }
+                else {
+                    getItems().add(new DetailReportItem(testName, ResultType.differentResultsFailed, q, expectedTitles, actualTitles));
                     updateCounter(counters, ResultType.differentResultsFailed);
                 }
-            } else {
-            	getItems().add(new DetailReportItem(testName, ResultType.noResultsFailed, q, expectedTitles, NONE));
+            }
+            else {
+                getItems().add(new DetailReportItem(testName, ResultType.noResultsFailed, q, expectedTitles, NONE));
                 updateCounter(counters, ResultType.noResultsFailed);
             }
         } else
@@ -96,17 +98,17 @@ public class DetailReport extends Report {
         counters.put(type, ++failureCounter);
     }
 
-	private String getTitles(Set<String> ids, Map<String, String> titleIdToName) {
-		String returnValue = "";
-		Joiner joiner = Joiner.on(SEPARATOR);
-		if (ids != null && titleIdToName != null && titleIdToName.keySet() != null) {
-			Set<String> intersection = Sets.intersection(ids, titleIdToName.keySet());
-			Map<String, String> copy = new LinkedHashMap<String, String>(titleIdToName);
-			copy.keySet().retainAll(intersection);
-			returnValue = joiner.join(copy.values());
-		}
-		return returnValue;
-	}
+    private String getTitles(Set<String> ids, Map<String, String> titleIdToName) {
+        String returnValue = "";
+        Joiner joiner = Joiner.on(SEPARATOR);
+        if (ids != null && titleIdToName != null && titleIdToName.keySet() != null) {
+            Set<String> intersection = Sets.intersection(ids, titleIdToName.keySet());
+            Map<String, String> copy = new LinkedHashMap<String, String>(titleIdToName);
+            copy.keySet().retainAll(intersection);
+            returnValue = joiner.join(copy.values());
+        }
+        return returnValue;
+    }
 
     @Override
     protected ReportItem getDiffForReportItem(ReportItem previousItem, ReportItem currentItem)
@@ -115,11 +117,13 @@ public class DetailReport extends Report {
         if (previousItem != null) {
             if (currentItem != null) {
                 // TODO: DO NOTHING, they are essentially the same, ignoring the lists for now
-            } else {
+            }
+            else {
                 returnValue = new DetailReportItem(new LinkedHashMap<String, String>(previousItem.getNamedValues()));
                 returnValue.setValue(DetailReportHeader.comments.toString(), FIXED);
             }
-        } else {
+        }
+        else {
             returnValue = new DetailReportItem(new LinkedHashMap<String, String>(currentItem.getNamedValues()));
             returnValue.setValue(DetailReportHeader.comments.toString(), NEW);
         }

@@ -24,13 +24,13 @@ import org.testng.annotations.Test;
 
 public class DateUtilsTest {
 
-	@Test
-	public void dateTest() throws ParseException
-	{
-		DateUtil dateUtil = new DateUtil();
-		Date dateFromString = dateUtil.getDateFromString("2016Jun23_07:56:47");
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-		Date expected = sdf.parse("23/06/2016 07:56:47");
-		Assert.assertEquals(dateFromString, expected);
-	}
+    @Test
+    public void dateTest() throws ParseException
+    {
+        DateUtil dateUtil = new DateUtil();
+        Date dateFromString = dateUtil.getDateFromString("2016Jun23_07:56:47");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        Date expected = sdf.parse("23/06/2016 07:56:47");
+        Assert.assertEquals(dateFromString, expected);
+    }
 }

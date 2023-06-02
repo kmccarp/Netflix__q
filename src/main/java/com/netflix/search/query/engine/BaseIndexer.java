@@ -47,14 +47,14 @@ public abstract class BaseIndexer {
     private static final int BUFFER_SIZE = 1 << 16; // 64K
     private Client client = Client.create();
 
-    private String inputFileName=null;
-    private String testName=null;
+    private String inputFileName = null;
+    private String testName = null;
 
     public BaseIndexer(String inputFileName, String testName) {
         this.inputFileName = inputFileName;
         this.testName = testName;
     }
-    
+
     public void indexData(List<String> languages) throws Throwable
     {
         long start = System.currentTimeMillis();
@@ -73,8 +73,8 @@ public abstract class BaseIndexer {
         String lineString = null;
         while ((lineString = reader.readLine()) != null) {
             String[] line = lineString.split(Properties.inputDelimiter.get());
-			if (lineString.startsWith(Properties.idField.get() + Properties.inputDelimiter.get()))
-				continue;
+            if (lineString.startsWith(Properties.idField.get() + Properties.inputDelimiter.get()))
+                continue;
             if (line.length < 3)
                 logger.error("Bad data: " + lineString);
             else
@@ -89,112 +89,113 @@ public abstract class BaseIndexer {
     {
         Map<String, Object> doc = new HashMap<String, Object>();
         doc.put(Properties.idField.get(), StringUtils.createIdUsingTestName(id, testName));
-        
-        for(String requiredField:Properties.requiredNumericFields.get())
-        	doc.put(requiredField, 1);
 
-        for(String requiredField:Properties.requiredStringFields.get())
-        	doc.put(requiredField, "query_testing_default");
+        for (String requiredField :Properties.requiredNumericFields.get())
+            doc.put(requiredField, 1);
+
+        for (String requiredField :Properties.requiredStringFields.get())
+            doc.put(requiredField, "query_testing_default");
 
         if (local != null && local.length() > 0) {
-            for (String language: languages){
-            	for(String fieldName: Properties.titleFields.get()) {
-					doc.put(fieldName + "_" + language, addValue(doc, language, fieldName, local));
-					//TODO: bug?
-					if (Properties.languagesRequiringTransliterationFromEnglish.get().contains(language) && fieldName.equals(Properties.transliterationFieldName.get()))
-						doc.put(fieldName + "_" + language, english);
-				}
+            for (String language : languages) {
+                for (String fieldName : Properties.titleFields.get()) {
+                    doc.put(fieldName + "_" + language, addValue(doc, language, fieldName, local));
+                    //TODO: bug?
+                    if (Properties.languagesRequiringTransliterationFromEnglish.get().contains(language) && fieldName.equals(Properties.transliterationFieldName.get()))
+                        doc.put(fieldName + "_" + language, english);
+                }
             }
         }
         if (english != null && english.length() > 0) {
-        	for(String fieldName: Properties.titleFields.get())
-				doc.put(fieldName + "_en", english);
+            for (String fieldName : Properties.titleFields.get())
+                doc.put(fieldName + "_en", english);
         }
-		if (altTitle != null && altTitle.length() > 0) {
-			for (String language : languages) {
-				if (Properties.languagesRequiringAdditionalField.get().contains(language))
-					for (String fieldName : Properties.titleAkaFields.get()) {
-						doc.put(fieldName + "_" + language, addValue(doc, language, fieldName, altTitle));
-					}
-			}
-		}
+        if (altTitle != null && altTitle.length() > 0) {
+            for (String language : languages) {
+                if (Properties.languagesRequiringAdditionalField.get().contains(language))
+                    for (String fieldName : Properties.titleAkaFields.get()) {
+                        doc.put(fieldName + "_" + language, addValue(doc, language, fieldName, altTitle));
+                    }
+            }
+        }
 
         doc.put(Properties.docTypeFieldName.get(), testName);
-        
+
         return doc;
     }
 
-	private Set<String> addValue(Map<String, Object> doc, String language, String fieldName, String title)
-	{
-		@SuppressWarnings("unchecked")
-		Set<String> existingValues = (Set<String>)doc.get(fieldName + "_" + language);
-		if(existingValues==null) existingValues = Sets.newHashSet();
-		existingValues.add(title);
-		return existingValues;
-	}
-
-	private boolean update(List<Map<String, Object>> docs) throws IOException {
-		for (Map<String, Object> doc : docs) {
-			try {
-				addDoc(doc);
-			} catch (Throwable e) {
-				logger.error("bad doc" + doc);
-				throw new RuntimeException(e);
-			}
-		}
-		return true;
-	}
-
-	void addDoc(Map<String, Object> doc)
-	{
-		JsonNode node = new ObjectMapper().valueToTree(doc);
-		StringBuilder jsonString = getJsonStringOfDoc(node);
-
-		WebResource webResource = client.resource(getUrlForAddingDoc(doc));
-		ClientResponse response = webResource.type("application/json").post(ClientResponse.class, jsonString.toString());
-		if (response == null || (response.getStatus() != 201 && response.getStatus() != 200))
-		{
-			throw new RuntimeException("Failed : HTTP error code on adding a doc: " + response.getStatus());
-		}
-		response.close();
-	}
-
-	public StringBuilder getJsonStringOfDoc(JsonNode node)
-	{
-		StringBuilder jsonString = new StringBuilder("[");
-		nodeAsString(node, jsonString);
-		jsonString.append("]");
-		return jsonString;
-	}
-
-	public void nodeAsString(JsonNode node, StringBuilder jsonString)
-	{
-		try
-		{
-			jsonString.append(new ObjectMapper().writeValueAsString(node));
-		} catch (JsonProcessingException e)
-		{
-			logger.error("Error trying to generate a string from a json node", e);
-		}
-	}
-
-	void commit()
-	{
-		WebResource webResource = client.resource(getUrlForCommitting());
-		ClientResponse response = webResource.get(ClientResponse.class);
-		if (response == null || (response.getStatus() != 201 && response.getStatus() != 200))
-		{
-			throw new RuntimeException("Failed : HTTP error code on commit: " + response.getStatus());
-		}
-		response.close();
-	}
-	
-    public String getServerUrl(){
-    	return "http://" + Properties.engineHost.get() + ":" + Properties.enginePort.get() + "/" + Properties.engineServlet.get() + "/" + Properties.engineIndexName.get();
+    private Set<String> addValue(Map<String, Object> doc, String language, String fieldName, String title)
+    {
+        @SuppressWarnings("unchecked")
+        Set<String> existingValues = (Set<String>) doc.get(fieldName + "_" + language);
+        if (existingValues == null) existingValues = Sets.newHashSet();
+        existingValues.add(title);
+        return existingValues;
     }
-	
-	public abstract String getUrlForAddingDoc(Map<String, Object> doc);
-	public abstract String getUrlForCommitting();
+
+    private boolean update(List<Map<String, Object>> docs) throws IOException {
+        for (Map<String, Object> doc : docs) {
+            try {
+                addDoc(doc);
+            } catch (Throwable e) {
+                logger.error("bad doc" + doc);
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
+    }
+
+    void addDoc(Map<String, Object> doc)
+    {
+        JsonNode node = new ObjectMapper().valueToTree(doc);
+        StringBuilder jsonString = getJsonStringOfDoc(node);
+
+        WebResource webResource = client.resource(getUrlForAddingDoc(doc));
+        ClientResponse response = webResource.type("application/json").post(ClientResponse.class, jsonString.toString());
+        if (response == null || (response.getStatus() != 201 && response.getStatus() != 200))
+        {
+            throw new RuntimeException("Failed : HTTP error code on adding a doc: " + response.getStatus());
+        }
+        response.close();
+    }
+
+    public StringBuilder getJsonStringOfDoc(JsonNode node)
+    {
+        StringBuilder jsonString = new StringBuilder("[");
+        nodeAsString(node, jsonString);
+        jsonString.append("]");
+        return jsonString;
+    }
+
+    public void nodeAsString(JsonNode node, StringBuilder jsonString)
+    {
+        try
+        {
+            jsonString.append(new ObjectMapper().writeValueAsString(node));
+        } catch (JsonProcessingException e)
+        {
+            logger.error("Error trying to generate a string from a json node", e);
+        }
+    }
+
+    void commit()
+    {
+        WebResource webResource = client.resource(getUrlForCommitting());
+        ClientResponse response = webResource.get(ClientResponse.class);
+        if (response == null || (response.getStatus() != 201 && response.getStatus() != 200))
+        {
+            throw new RuntimeException("Failed : HTTP error code on commit: " + response.getStatus());
+        }
+        response.close();
+    }
+
+    public String getServerUrl() {
+        return "http://" + Properties.engineHost.get() + ":" + Properties.enginePort.get() + "/" + Properties.engineServlet.get() + "/" + Properties.engineIndexName.get();
+    }
+
+    public abstract String getUrlForAddingDoc(Map<String, Object> doc);
+
+    public abstract String getUrlForCommitting();
 
 
 }

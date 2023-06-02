@@ -32,73 +32,74 @@ public abstract class BaseSearcher {
 
     public static final Logger logger = LoggerFactory.getLogger(BaseSearcher.class);
 
-	private Client client = Client.create();
+    private Client client = Client.create();
 
-	public BaseSearcher() {
-	}
+    public BaseSearcher() {
+    }
 
-	public Set<String> getResults(String q, List<String> languages, String dataSetId) throws Throwable
-	{
-		String urlForGettingDoc = getUrlForGettingDoc(q, languages, dataSetId);
+    public Set<String> getResults(String q, List<String> languages, String dataSetId) throws Throwable
+    {
+        String urlForGettingDoc = getUrlForGettingDoc(q, languages, dataSetId);
 
-		if (Properties.isPrintUrl.get())
-			logger.info(urlForGettingDoc);
+        if (Properties.isPrintUrl.get())
+            logger.info(urlForGettingDoc);
 
-		String jsonString = getJsonForQuery(q, languages, dataSetId);
+        String jsonString = getJsonForQuery(q, languages, dataSetId);
 
-		WebResource webResource = client.resource(urlForGettingDoc);
-		ClientResponse response = null;
+        WebResource webResource = client.resource(urlForGettingDoc);
+        ClientResponse response = null;
 
-		if (jsonString != null)
-			response = webResource.type("application/json").post(ClientResponse.class, jsonString);
-		else
-			response = webResource.get(ClientResponse.class);
-		if (response == null || (response.getStatus() != 201 && response.getStatus() != 200))
-			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		String output = response.getEntity(String.class);
-		Set<String> results = getResultsFromServerResponse(output);
-		return results;
-	}
+        if (jsonString != null)
+            response = webResource.type("application/json").post(ClientResponse.class, jsonString);
+        else
+            response = webResource.get(ClientResponse.class);
+        if (response == null || (response.getStatus() != 201 && response.getStatus() != 200))
+            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+        String output = response.getEntity(String.class);
+        Set<String> results = getResultsFromServerResponse(output);
+        return results;
+    }
 
-	public static String getPhraseQueryString(String q)
-	{
-		if (q == null)
-			return null;
-		return "\"" + q.replaceAll("[\"|\\\\]", "") + "\"";
-	}
+    public static String getPhraseQueryString(String q)
+    {
+        if (q == null)
+            return null;
+        return "\"" + q.replaceAll("[\"|\\\\]", "") + "\"";
+    }
 
-	public static String getQueryFields(List<String> localeList)
-	{
-		StringBuffer sb = new StringBuffer();
-		if (localeList != null)
-		{
-			for (String fieldName : Properties.titleFields.get())
-				addNonDefaultLocaleTitleFieldName(localeList, sb, fieldName);
-			for (String fieldName : Properties.titleAkaFields.get())
-				addNonDefaultLocaleTitleFieldName(localeList, sb, fieldName);
-		}
-		return sb.toString().substring(0, sb.length()).trim();
-	}
+    public static String getQueryFields(List<String> localeList)
+    {
+        StringBuffer sb = new StringBuffer();
+        if (localeList != null)
+        {
+            for (String fieldName : Properties.titleFields.get())
+                addNonDefaultLocaleTitleFieldName(localeList, sb, fieldName);
+            for (String fieldName : Properties.titleAkaFields.get())
+                addNonDefaultLocaleTitleFieldName(localeList, sb, fieldName);
+        }
+        return sb.toString().substring(0, sb.length()).trim();
+    }
 
-	protected static void addNonDefaultLocaleTitleFieldName(List<String> localeList, StringBuffer sb, String fieldName)
-	{
-		for (String locale : localeList)
-		{
-			sb.append(fieldName + "_" + locale + " ");
-		}
-	}
+    protected static void addNonDefaultLocaleTitleFieldName(List<String> localeList, StringBuffer sb, String fieldName)
+    {
+        for (String locale : localeList)
+        {
+            sb.append(fieldName + "_" + locale + " ");
+        }
+    }
 
-	public abstract String getUrlForGettingDoc(String q, List<String> languages, String dataSetId);
-	public abstract Set<String> getResultsFromServerResponse(String output) throws IOException, JsonProcessingException;
+    public abstract String getUrlForGettingDoc(String q, List<String> languages, String dataSetId);
 
-	public String getJsonForQuery(String q, List<String> languages, String dataSetId) throws JsonProcessingException
-	{
-		return null;
-	}
+    public abstract Set<String> getResultsFromServerResponse(String output) throws IOException, JsonProcessingException;
 
-	public String getServerUrl()
-	{
-		return "http://" + Properties.engineHost.get() + ":" + Properties.enginePort.get() + "/" + Properties.engineServlet.get() + "/" + Properties.engineIndexName.get();
-	}
+    public String getJsonForQuery(String q, List<String> languages, String dataSetId) throws JsonProcessingException
+    {
+        return null;
+    }
+
+    public String getServerUrl()
+    {
+        return "http://" + Properties.engineHost.get() + ":" + Properties.enginePort.get() + "/" + Properties.engineServlet.get() + "/" + Properties.engineIndexName.get();
+    }
 
 }

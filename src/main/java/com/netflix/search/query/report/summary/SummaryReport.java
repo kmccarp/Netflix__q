@@ -27,9 +27,9 @@ import com.netflix.search.query.report.ReportType;
 import com.netflix.search.query.report.ResultType;
 
 public class SummaryReport extends Report {
-    
+
     private static final String DROPPED = "dropped";
-	public static final String PERCENT_SIGN = "%";
+    public static final String PERCENT_SIGN = "%";
 
     public SummaryReport(List<ReportItem> items) {
         super();
@@ -41,23 +41,23 @@ public class SummaryReport extends Report {
     }
 
     @Override
-	public ReportType getReportType()
-	{
-		return ReportType.summary;
-	}
-    
+    public ReportType getReportType()
+    {
+        return ReportType.summary;
+    }
+
     @Override
     protected String getReportName()
     {
         return ReportType.summary.toString();
     }
-    
+
     @Override
-	protected Report newReport(List<ReportItem> items)
+    protected Report newReport(List<ReportItem> items)
     {
         return new SummaryReportDiff(items);
     }
-    
+
     @Override
     protected ReportItem getDiffForReportItem(ReportItem previousItem, ReportItem currentItem)
     {
@@ -65,16 +65,19 @@ public class SummaryReport extends Report {
         if (previousItem == null) {
             if (currentItem != null)
                 returnValue = new SummaryReportItem(new LinkedHashMap<String, String>(currentItem.getNamedValues()));
-        } else {
+        }
+        else {
             for (String name : previousItem.getNamedValues().keySet()) {
                 String previousValue = previousItem.getNamedValues().get(name);
                 if (name.equals(SummaryReportHeader.comments.toString())) continue;
                 if (name.equals(SummaryReportHeader.name.toString())) {
                     returnValue.getNamedValues().put(SummaryReportHeader.name.toString(), previousValue);
-                } else {
+                }
+                else {
                     if (currentItem == null) {
                         returnValue.getNamedValues().put(SummaryReportHeader.comments.toString(), DROPPED);
-                    } else {
+                    }
+                    else {
                         String currentValue = currentItem.getNamedValues().get(name);
                         if (previousValue.contains(PERCENT_SIGN)) {
                             previousValue = previousValue.replaceAll(PERCENT_SIGN, "");
@@ -83,7 +86,8 @@ public class SummaryReport extends Report {
                             Double currentNumeric = Double.valueOf(currentValue);
                             Double difference = currentNumeric - previousNumeric;
                             returnValue.setValue(name, (String.format("%.2f", (difference)) + PERCENT_SIGN));
-                        } else {
+                        }
+                        else {
                             Integer previousNumeric = Integer.valueOf(previousValue);
                             Integer currentNumeric = Integer.valueOf(currentValue);
                             Integer difference = currentNumeric - previousNumeric;
@@ -96,32 +100,32 @@ public class SummaryReport extends Report {
         return returnValue;
     }
 
-    
+
     public void updateStatistic(Set<String> relevantDocuments, Set<String> results, List<Double> precisionList, List<Double> recallList, List<Double> fMeasureList)
     {
         Double precision = 0d;
         Double recall = 0d;
         Double fMeasure = 0d;
 
-		if (results != null && relevantDocuments != null) {
-			Set<String> relevantRetrievedResults = Sets.intersection(results, relevantDocuments);
-			if (results.size() != 0)
-				precision = (double) relevantRetrievedResults.size() / (double) results.size();
-			if (relevantDocuments.size() != 0)
-				recall = (double) relevantRetrievedResults.size() / (double) relevantDocuments.size();
-			if (precision != 0 || recall != 0)
-				fMeasure = 2 * ((precision * recall) / (precision + recall));
-		}
+        if (results != null && relevantDocuments != null) {
+            Set<String> relevantRetrievedResults = Sets.intersection(results, relevantDocuments);
+            if (results.size() != 0)
+                precision = (double) relevantRetrievedResults.size() / (double) results.size();
+            if (relevantDocuments.size() != 0)
+                recall = (double) relevantRetrievedResults.size() / (double) relevantDocuments.size();
+            if (precision != 0 || recall != 0)
+                fMeasure = 2 * ((precision * recall) / (precision + recall));
+        }
 
-		precisionList.add(precision);
+        precisionList.add(precision);
         recallList.add(recall);
         fMeasureList.add(fMeasure);
     }
 
     public void updateSummaryReport(String testName, int titlesTested, int queriesTested, List<Double> precisionList, List<Double> recallList, List<Double> fMeasureList,
-            Map<ResultType, Integer> counters)
+        Map<ResultType, Integer> counters)
     {
-    	getItems().add(new SummaryReportItem(testName, titlesTested, queriesTested, calculateAverage(precisionList), calculateAverage(recallList), calculateAverage(fMeasureList), counters));
+        getItems().add(new SummaryReportItem(testName, titlesTested, queriesTested, calculateAverage(precisionList), calculateAverage(recallList), calculateAverage(fMeasureList), counters));
     }
 
     private static double calculateAverage(List<Double> scores)
@@ -136,5 +140,5 @@ public class SummaryReport extends Report {
         return sum;
     }
 
-	
+
 }

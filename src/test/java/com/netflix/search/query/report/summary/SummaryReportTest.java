@@ -29,100 +29,100 @@ import com.netflix.search.query.report.ResultType;
 
 public class SummaryReportTest {
 
-	private static final String TEST1 = "test1";
+    private static final String TEST1 = "test1";
 
 
-	@Test
-	void emptyReportsTest()
-	{
-		Report previousSummaryReport = new SummaryReport();
-		Report report = new SummaryReport();
-		Report diffReport = report.createReportDiffs(previousSummaryReport);
-		List<ReportItem> items = diffReport.getItems();
-		List<ReportItem> expectedItems = Lists.newArrayList();
-		Assert.assertEquals(items, expectedItems);
-	}
+    @Test
+    void emptyReportsTest()
+    {
+        Report previousSummaryReport = new SummaryReport();
+        Report report = new SummaryReport();
+        Report diffReport = report.createReportDiffs(previousSummaryReport);
+        List<ReportItem> items = diffReport.getItems();
+        List<ReportItem> expectedItems = Lists.newArrayList();
+        Assert.assertEquals(items, expectedItems);
+    }
 
-	@Test
-	void noDiffReportsTest()
-	{
-		Report previousSummaryReport = new SummaryReport();
-		List<ReportItem> itemsForPreviousReport = Lists.newArrayList();
-		Map<ResultType, Integer> countersForPreviousReport = Maps.newHashMap();
-		itemsForPreviousReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.1, countersForPreviousReport));
-		previousSummaryReport.setItems(itemsForPreviousReport);
+    @Test
+    void noDiffReportsTest()
+    {
+        Report previousSummaryReport = new SummaryReport();
+        List<ReportItem> itemsForPreviousReport = Lists.newArrayList();
+        Map<ResultType, Integer> countersForPreviousReport = Maps.newHashMap();
+        itemsForPreviousReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.1, countersForPreviousReport));
+        previousSummaryReport.setItems(itemsForPreviousReport);
 
-		Report report = new SummaryReport();
-		List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
-		Map<ResultType, Integer> countersForCurrentReport = Maps.newHashMap();
-		itemsForCurrentReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.1, countersForCurrentReport));
+        Report report = new SummaryReport();
+        List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
+        Map<ResultType, Integer> countersForCurrentReport = Maps.newHashMap();
+        itemsForCurrentReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.1, countersForCurrentReport));
 
-		report.setItems(itemsForCurrentReport);
+        report.setItems(itemsForCurrentReport);
 
-		Report diffReport = report.createReportDiffs(previousSummaryReport);
+        Report diffReport = report.createReportDiffs(previousSummaryReport);
 
-		List<ReportItem> itemsForDiffsReport = diffReport.getItems();
+        List<ReportItem> itemsForDiffsReport = diffReport.getItems();
 
-		Map<String, ReportItem> expectedItems = Maps.newHashMap();
-		Map<ResultType, Integer> countersForExpectedDiffReport = Maps.newHashMap();
-		expectedItems.put(TEST1, new SummaryReportItem(TEST1, 0, 0, 0.0, 0.0, 0.0, countersForExpectedDiffReport));
-		
-		for (ReportItem item: itemsForDiffsReport){
-			Assert.assertEquals(item.getNamedValues(), expectedItems.get(item.getNamedValues().get(SummaryReportHeader.name.toString())).getNamedValues());
-		}
-	}
-	
-	@Test
-	void diffReportsTest()
-	{
-		Report previousSummaryReport = new SummaryReport();
-		List<ReportItem> itemsForPreviousReport = Lists.newArrayList();
-		Map<ResultType, Integer> countersForPreviousReport = Maps.newHashMap();
-		itemsForPreviousReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.1, countersForPreviousReport));
-		previousSummaryReport.setItems(itemsForPreviousReport);
+        Map<String, ReportItem> expectedItems = Maps.newHashMap();
+        Map<ResultType, Integer> countersForExpectedDiffReport = Maps.newHashMap();
+        expectedItems.put(TEST1, new SummaryReportItem(TEST1, 0, 0, 0.0, 0.0, 0.0, countersForExpectedDiffReport));
 
-		Report report = new SummaryReport();
-		List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
-		Map<ResultType, Integer> countersForCurrentReport = Maps.newHashMap();
-		itemsForCurrentReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.2, countersForCurrentReport));
+        for (ReportItem item : itemsForDiffsReport) {
+            Assert.assertEquals(item.getNamedValues(), expectedItems.get(item.getNamedValues().get(SummaryReportHeader.name.toString())).getNamedValues());
+        }
+    }
 
-		report.setItems(itemsForCurrentReport);
+    @Test
+    void diffReportsTest()
+    {
+        Report previousSummaryReport = new SummaryReport();
+        List<ReportItem> itemsForPreviousReport = Lists.newArrayList();
+        Map<ResultType, Integer> countersForPreviousReport = Maps.newHashMap();
+        itemsForPreviousReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.1, countersForPreviousReport));
+        previousSummaryReport.setItems(itemsForPreviousReport);
 
-		Report diffReport = report.createReportDiffs(previousSummaryReport);
+        Report report = new SummaryReport();
+        List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
+        Map<ResultType, Integer> countersForCurrentReport = Maps.newHashMap();
+        itemsForCurrentReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.2, countersForCurrentReport));
 
-		List<ReportItem> itemsForDiffsReport = diffReport.getItems();
+        report.setItems(itemsForCurrentReport);
 
-		Map<String, ReportItem> expectedItems = Maps.newHashMap();
-		Map<ResultType, Integer> countersForExpectedDiffReport = Maps.newHashMap();
-		expectedItems.put(TEST1, new SummaryReportItem(TEST1, 0, 0, 0.0, 0.0, 0.1, countersForExpectedDiffReport));
-		
-		for (ReportItem item: itemsForDiffsReport){
-			Assert.assertEquals(item.getNamedValues(), expectedItems.get(item.getNamedValues().get(SummaryReportHeader.name.toString())).getNamedValues());
-		}
-		
-	}	
-	
+        Report diffReport = report.createReportDiffs(previousSummaryReport);
 
-	@Test
-	void previousNullReportTest()
-	{
-		Report report = new SummaryReport();
-		List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
-		Map<ResultType, Integer> countersForCurrentReport = Maps.newHashMap();
-		itemsForCurrentReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.1, countersForCurrentReport));
+        List<ReportItem> itemsForDiffsReport = diffReport.getItems();
 
-		report.setItems(itemsForCurrentReport);
+        Map<String, ReportItem> expectedItems = Maps.newHashMap();
+        Map<ResultType, Integer> countersForExpectedDiffReport = Maps.newHashMap();
+        expectedItems.put(TEST1, new SummaryReportItem(TEST1, 0, 0, 0.0, 0.0, 0.1, countersForExpectedDiffReport));
 
-		Report diffReport = report.createReportDiffs(null);
+        for (ReportItem item : itemsForDiffsReport) {
+            Assert.assertEquals(item.getNamedValues(), expectedItems.get(item.getNamedValues().get(SummaryReportHeader.name.toString())).getNamedValues());
+        }
 
-		List<ReportItem> itemsForDiffsReport = diffReport.getItems();
+    }
 
-		Map<String, ReportItem> expectedItems = Maps.newHashMap();
-		Map<ResultType, Integer> countersForExpectedDiffReport = Maps.newHashMap();
-		expectedItems.put(TEST1, new SummaryReportItem(TEST1, 0, 0, 0.0, 0.0, 0.0, countersForExpectedDiffReport));
-		
-		for (ReportItem item: itemsForDiffsReport){
-			Assert.assertEquals(item.getNamedValues(), expectedItems.get(item.getNamedValues().get(SummaryReportHeader.name.toString())).getNamedValues());
-		}
-	}	
+
+    @Test
+    void previousNullReportTest()
+    {
+        Report report = new SummaryReport();
+        List<ReportItem> itemsForCurrentReport = Lists.newArrayList();
+        Map<ResultType, Integer> countersForCurrentReport = Maps.newHashMap();
+        itemsForCurrentReport.add(new SummaryReportItem(TEST1, 1, 1, 0.1, 0.1, 0.1, countersForCurrentReport));
+
+        report.setItems(itemsForCurrentReport);
+
+        Report diffReport = report.createReportDiffs(null);
+
+        List<ReportItem> itemsForDiffsReport = diffReport.getItems();
+
+        Map<String, ReportItem> expectedItems = Maps.newHashMap();
+        Map<ResultType, Integer> countersForExpectedDiffReport = Maps.newHashMap();
+        expectedItems.put(TEST1, new SummaryReportItem(TEST1, 0, 0, 0.0, 0.0, 0.0, countersForExpectedDiffReport));
+
+        for (ReportItem item : itemsForDiffsReport) {
+            Assert.assertEquals(item.getNamedValues(), expectedItems.get(item.getNamedValues().get(SummaryReportHeader.name.toString())).getNamedValues());
+        }
+    }
 }

@@ -27,23 +27,23 @@ public class ElasticsearchIndexer extends BaseIndexer {
         super(inputFileName, testName);
     }
 
-	@Override
-	public String getUrlForAddingDoc(Map<String, Object> doc)
-	{
-		return getServerUrl()+"/"+Properties.esDocType.get()+"/" + doc.get("id").toString();
-	}
+    @Override
+    public String getUrlForAddingDoc(Map<String, Object> doc)
+    {
+        return getServerUrl() + "/" + Properties.esDocType.get() + "/" + doc.get("id").toString();
+    }
 
-	@Override
-	public String getUrlForCommitting()
-	{
-		return getServerUrl()+"/_flush";
-	}
-    
-	@Override
-	public StringBuilder getJsonStringOfDoc(JsonNode node)
-	{
-		StringBuilder jsonString = new StringBuilder();
-		nodeAsString(node, jsonString);
-		return jsonString;
-	}
+    @Override
+    public String getUrlForCommitting()
+    {
+        return getServerUrl() + "/_flush";
+    }
+
+    @Override
+    public StringBuilder getJsonStringOfDoc(JsonNode node)
+    {
+        StringBuilder jsonString = new StringBuilder();
+        nodeAsString(node, jsonString);
+        return jsonString;
+    }
 }

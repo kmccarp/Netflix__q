@@ -34,13 +34,13 @@ import com.netflix.search.query.utils.StringUtils;
 public class TitleWithQueries {
     public static final Logger logger = LoggerFactory.getLogger(TitleWithQueries.class);
 
-	public static final String Q_ = "q_";
-	public static final String TITLE_ALT = "title_alt";
-	public static final String TITLE_LOCALE = "title_locale";
-	public static final String TITLE_EN = "title_en";
-	public static final String ID = "id";
-	private static final String SHEET_NAME_DELIMITER = "-";
-	private static final Joiner JOINER_QUERIES = Joiner.on("~~~");
+    public static final String Q_ = "q_";
+    public static final String TITLE_ALT = "title_alt";
+    public static final String TITLE_LOCALE = "title_locale";
+    public static final String TITLE_EN = "title_en";
+    public static final String ID = "id";
+    private static final String SHEET_NAME_DELIMITER = "-";
+    private static final Joiner JOINER_QUERIES = Joiner.on("~~~");
     private static final Joiner JOINER_CATEGORIES = Joiner.on("=");
 
     private String id;
@@ -62,7 +62,7 @@ public class TitleWithQueries {
 
     public String getId()
     {
-		return  StringUtils.createIdUsingTestName(id, sheetId);
+        return  StringUtils.createIdUsingTestName(id, sheetId);
     }
 
     public String getTitleEn()
@@ -97,7 +97,7 @@ public class TitleWithQueries {
 
     public void setValue(String headerValue, String value)
     {
-        if(headerValue==null){
+        if (headerValue == null) {
             logger.error("Header is missing for this value: " + value);
             return;
         }
@@ -129,7 +129,7 @@ public class TitleWithQueries {
     public String toString()
     {
         List<String> mapToList = mapToList(queriesByCategory);
-        return getId() + Properties.inputDelimiter.get() + titleEn + Properties.inputDelimiter.get() + titleLocale + Properties.inputDelimiter.get() + (titleAlt==null?"":titleAlt) + Properties.inputDelimiter.get()+"q=" + mapToList;
+        return getId() + Properties.inputDelimiter.get() + titleEn + Properties.inputDelimiter.get() + titleLocale + Properties.inputDelimiter.get() + (titleAlt == null ? "" : titleAlt) + Properties.inputDelimiter.get() + "q=" + mapToList;
     }
 
     private List<String> mapToList(final Map<String, Set<String>> input)
