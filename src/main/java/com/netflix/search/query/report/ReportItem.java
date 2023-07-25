@@ -23,7 +23,7 @@ import com.netflix.search.query.Properties;
 
 public abstract class ReportItem {
     private Map<String, String>  namedValues= Maps.newLinkedHashMap();
-    private String key = null;
+    private String key;
 
     public Map<String, String> getNamedValues()
     {
