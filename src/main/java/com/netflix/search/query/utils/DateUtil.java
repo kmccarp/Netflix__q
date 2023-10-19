@@ -28,7 +28,7 @@ import com.netflix.search.query.Properties;
 public class DateUtil {
     public static final Logger logger = LoggerFactory.getLogger(DateUtil.class);
 
-    private final DateFormat DATE_FORMAT = new SimpleDateFormat(Properties.dateFormat.get(), Locale.ENGLISH);
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat(Properties.dateFormat.get(), Locale.ENGLISH);
 
     public String getStringFromDate(Date date)
     {
